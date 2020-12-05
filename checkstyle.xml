@@ -3,7 +3,9 @@
 
 <module name="Checker">
   <module name="TreeWalker">
-    <module name="LineLength"/>
+    <module name="LineLength">
+        <property name="max" value="120"/>
+    </module>
     <module name="BooleanExpressionComplexity"/>
     <module name="CyclomaticComplexity"/>
     <module name="NeedBraces"/>
