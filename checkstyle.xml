@@ -7,7 +7,9 @@
         <property name="max" value="120"/>
     </module>
     <module name="BooleanExpressionComplexity"/>
-    <module name="CyclomaticComplexity"/>
+    <module name="CyclomaticComplexity">
+        <property name="max" value="12"/>
+    </module>
     <module name="NeedBraces"/>
     <module name="IllegalImport"/>
     <module name="AvoidStarImport"/>
