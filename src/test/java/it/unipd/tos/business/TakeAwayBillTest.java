@@ -22,6 +22,7 @@ public class TakeAwayBillTest {
     private TakeAwayBill takeAwayBill;
     private MenuItem cornetto;
     private MenuItem sandwich;
+    private MenuItem ghiacciolo;
     private MenuItem creamCaramel;
     private MenuItem pannaCotta;
     private MenuItem cola;
@@ -40,6 +41,7 @@ public class TakeAwayBillTest {
         creamCaramel = new MenuItemImpl(16131919L, "Cream Caramel", ItemType.BUDINO, 5.5D);
         pannaCotta = new MenuItemImpl(16131527L, "Panna Cotta", ItemType.BUDINO, 10.0D);
         sandwich = new MenuItemImpl(16191589L, "Sandwich", ItemType.GELATO, 2.2D);
+        ghiacciolo = new MenuItemImpl(18591589L, "Ghiacciolo", ItemType.GELATO, 0.8D);
 
         takeAwayBill = new TakeAwayBillImpl();
         user = new UserImpl(56718903L, "Pinco");
@@ -83,6 +85,12 @@ public class TakeAwayBillTest {
     }
     
     @Test
+    public void test_getOrderPriceFeeApplied() throws TakeAwayBillException {
+        list.add(cola);
+        assertEquals(3D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+    }
+    
+    @Test
     public void test_getOrderPrice50DiscountApplied() throws TakeAwayBillException {
         list.add(sandwich);
         list.add(cornetto);
@@ -106,6 +114,34 @@ public class TakeAwayBillTest {
         list.add(fanta);
         list.add(fanta);
         assertEquals(50.31D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+    }
+    
+    @Test
+    public void test_getOrderPrice10Discount50DiscountApplied() throws TakeAwayBillException {
+        list.add(cornetto);
+        list.add(cornetto);
+        list.add(cornetto);
+        list.add(sandwich);
+        list.add(sandwich);
+        list.add(sandwich);
+        list.add(pannaCotta);
+        list.add(pannaCotta);
+        list.add(pannaCotta);
+        list.add(creamCaramel);
+        
+        assertEquals(44.19D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+    }
+    
+    @Test
+    public void test_getOrderPrice50Fee50DiscountApplied() throws TakeAwayBillException {
+        list.add(ghiacciolo);
+        list.add(ghiacciolo);
+        list.add(ghiacciolo);
+        list.add(ghiacciolo);
+        list.add(ghiacciolo);
+        list.add(sandwich);
+        
+        assertEquals(6.3D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
     }
 
 }
