@@ -4,4 +4,4 @@
 
 [![Build Status](https://travis-ci.com/mattiaee/dw-demo-app.svg?branch=master)](https://travis-ci.com/mattiaee/dw-demo-app)
 
-[![Coverage Status](https://coveralls.io/repos/github/mattiaee/GelateriaPadovana/badge.svg)](https://coveralls.io/github/mattiaee/GelateriaPadovana)
+[![Coverage Status](https://coveralls.io/repos/github/mattiaee/GelateriaPadovana/badge.svg?branch=master)](https://coveralls.io/github/mattiaee/GelateriaPadovana?branch=master)
