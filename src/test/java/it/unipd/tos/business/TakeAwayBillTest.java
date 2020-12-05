@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////
 package it.unipd.tos.business;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedList;
 
@@ -68,6 +68,18 @@ public class TakeAwayBillTest {
         list.add(creamCaramel);
         list.add(fanta);
         assertEquals(12.9D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+    }
+    
+    @Test
+    public void test_getOrderPrice50DiscountApplied() throws TakeAwayBillException {
+        list.add(sandwich);
+        list.add(cornetto);
+        list.add(sandwich);
+        list.add(cornetto);
+        list.add(cornetto);
+        list.add(sandwich);
+        list.add(fanta);
+        assertEquals(16.1D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
     }
 
 }
