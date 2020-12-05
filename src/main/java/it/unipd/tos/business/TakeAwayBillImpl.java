@@ -24,7 +24,11 @@ public class TakeAwayBillImpl implements TakeAwayBill {
         if (user == null) {
             throw new IllegalArgumentException("User is not set");
         }
-
+        
+        if(itemsOrdered.size() > 30) {
+            throw new TakeAwayBillException();
+        }
+        
         double result = 0;
         int nIcecream = 0;
         double totIcecremAndPudding = 0D;

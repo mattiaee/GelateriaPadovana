@@ -62,7 +62,17 @@ public class TakeAwayBillTest {
         nullUser = null;
         takeAwayBill.getOrderPrice(list, nullUser);
     }
-
+    
+    @Test(expected = TakeAwayBillException.class)
+    public void test_getOrderPrice33Items() throws TakeAwayBillException {
+        for (int i = 0; i < 11; i++) {
+            list.add(fanta);
+            list.add(cornetto);
+            list.add(creamCaramel);
+        }
+        takeAwayBill.getOrderPrice(list, user);
+    }
+    
     @Test
     public void test_getOrderPriceTotal() throws TakeAwayBillException {
         list.add(sandwich);
