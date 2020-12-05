@@ -23,6 +23,7 @@ public class TakeAwayBillTest {
     private MenuItem cornetto;
     private MenuItem sandwich;
     private MenuItem creamCaramel;
+    private MenuItem pannaCotta;
     private MenuItem cola;
     private MenuItem fanta;
     private User user;
@@ -37,6 +38,7 @@ public class TakeAwayBillTest {
         cola = new MenuItemImpl(16193019L, "CocaCola", ItemType.BEVANDA, 2.5D);
         cornetto = new MenuItemImpl(164791919L, "Cornetto", ItemType.GELATO, 2.7D);
         creamCaramel = new MenuItemImpl(16131919L, "Cream Caramel", ItemType.BUDINO, 5.5D);
+        pannaCotta = new MenuItemImpl(16131527L, "Panna Cotta", ItemType.BUDINO, 10.0D);
         sandwich = new MenuItemImpl(16191589L, "Sandwich", ItemType.GELATO, 2.2D);
 
         takeAwayBill = new TakeAwayBillImpl();
@@ -80,6 +82,20 @@ public class TakeAwayBillTest {
         list.add(sandwich);
         list.add(fanta);
         assertEquals(16.1D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+    }
+    
+    @Test
+    public void test_getOrderPrice10DiscountApplied() throws TakeAwayBillException {
+        list.add(pannaCotta);
+        list.add(pannaCotta);
+        list.add(pannaCotta);
+        list.add(pannaCotta);
+        list.add(cornetto);
+        list.add(cornetto);
+        list.add(creamCaramel);
+        list.add(fanta);
+        list.add(fanta);
+        assertEquals(50.31D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
     }
 
 }

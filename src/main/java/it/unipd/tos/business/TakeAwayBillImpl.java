@@ -27,6 +27,7 @@ public class TakeAwayBillImpl implements TakeAwayBill {
 
         double result = 0;
         int nIcecream = 0;
+        double totIcecremAndPudding = 0D;
         MenuItem cheapestIcecream = null;
         
         for (MenuItem m : itemsOrdered) {
@@ -42,12 +43,20 @@ public class TakeAwayBillImpl implements TakeAwayBill {
                 }
             }
             
+            if(m.getType() == ItemType.GELATO || m.getType() == ItemType.BUDINO) {
+                totIcecremAndPudding += m.getPrice();
+            }
+            
         }
         
         if(nIcecream > 5) {
             result -= cheapestIcecream.getPrice() * 0.5D;
         }
-
+        
+        if(totIcecremAndPudding > 50D) {
+            result -= result * 0.1D; 
+        }
+        
         return result;
 
     }
