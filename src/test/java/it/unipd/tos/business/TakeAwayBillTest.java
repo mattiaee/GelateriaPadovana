@@ -5,6 +5,7 @@ package it.unipd.tos.business;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalTime;
 import java.util.LinkedList;
 
 import org.junit.Before;
@@ -14,6 +15,8 @@ import it.unipd.tos.business.exception.TakeAwayBillException;
 import it.unipd.tos.model.ItemType;
 import it.unipd.tos.model.MenuItem;
 import it.unipd.tos.model.MenuItemImpl;
+import it.unipd.tos.model.Order;
+import it.unipd.tos.model.OrderImpl;
 import it.unipd.tos.model.User;
 import it.unipd.tos.model.UserImpl;
 
@@ -21,14 +24,16 @@ public class TakeAwayBillTest {
 
     private TakeAwayBill takeAwayBill;
     private MenuItem cornetto;
-    private MenuItem sandwich;
     private MenuItem ghiacciolo;
-    private MenuItem creamCaramel;
     private MenuItem pannaCotta;
-    private MenuItem cola;
     private MenuItem fanta;
+    private Order orderInTime;
+    private Order orderOutTime;
+    private Order orderRandomFalse;
     private User user;
-    private User nullUser;
+    private User userMin;
+    private LocalTime inTime;
+    private LocalTime outTime;
 
     LinkedList<MenuItem> list = new LinkedList<>();
 
@@ -36,33 +41,43 @@ public class TakeAwayBillTest {
     public void setup() {
 
         fanta = new MenuItemImpl(16156919L, "Fanta", ItemType.BEVANDA, 2.5D);
-        cola = new MenuItemImpl(16193019L, "CocaCola", ItemType.BEVANDA, 2.5D);
         cornetto = new MenuItemImpl(164791919L, "Cornetto", ItemType.GELATO, 2.7D);
-        creamCaramel = new MenuItemImpl(16131919L, "Cream Caramel", ItemType.BUDINO, 5.5D);
         pannaCotta = new MenuItemImpl(16131527L, "Panna Cotta", ItemType.BUDINO, 10.0D);
-        sandwich = new MenuItemImpl(16191589L, "Sandwich", ItemType.GELATO, 2.2D);
         ghiacciolo = new MenuItemImpl(18591589L, "Ghiacciolo", ItemType.GELATO, 0.8D);
-
+        
+        inTime = LocalTime.parse("18:30:00.00");
+        outTime = LocalTime.parse("20:00:00.00");
+        
         takeAwayBill = new TakeAwayBillImpl();
-        user = new UserImpl(56718903L, "Pinco");
+        user = new UserImpl(56718903L, "Pinco", 19);
+        userMin = new UserImpl(56752903L, "Tizio", 16);
+        orderInTime = new OrderImpl(34529812L, inTime, true);
+        orderOutTime = new OrderImpl(34529812L, outTime, true);
+        orderRandomFalse = new OrderImpl(34529812L, inTime, false);
         list = new LinkedList<>();
+
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void test_getOrderPriceNullItems() throws TakeAwayBillException {
-        takeAwayBill.getOrderPrice(null, user);
+        takeAwayBill.getOrderPrice(null, user, orderInTime);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void test_getOrderPrice0Items() throws TakeAwayBillException {
-        takeAwayBill.getOrderPrice(list, user);
+        takeAwayBill.getOrderPrice(list, user, orderInTime);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void test_getOrderPriceNullUser() throws TakeAwayBillException {
-        list.add(cola);
-        nullUser = null;
-        takeAwayBill.getOrderPrice(list, nullUser);
+        list.add(fanta);
+        takeAwayBill.getOrderPrice(list, null, orderInTime);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void test_getOrderPriceNullOrder() throws TakeAwayBillException {
+        list.add(fanta);
+        takeAwayBill.getOrderPrice(list, user, null);
     }
     
     @Test(expected = TakeAwayBillException.class)
@@ -70,36 +85,35 @@ public class TakeAwayBillTest {
         for (int i = 0; i < 11; i++) {
             list.add(fanta);
             list.add(cornetto);
-            list.add(creamCaramel);
+            list.add(pannaCotta);
         }
-        takeAwayBill.getOrderPrice(list, user);
+        takeAwayBill.getOrderPrice(list, user, orderInTime);
     }
     
     @Test
     public void test_getOrderPriceTotal() throws TakeAwayBillException {
-        list.add(sandwich);
         list.add(cornetto);
-        list.add(creamCaramel);
+        list.add(pannaCotta);
         list.add(fanta);
-        assertEquals(12.9D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+        assertEquals(15.2D, takeAwayBill.getOrderPrice(list, user, orderInTime), 0.0001D);
     }
     
     @Test
     public void test_getOrderPriceFeeApplied() throws TakeAwayBillException {
-        list.add(cola);
-        assertEquals(3D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+        list.add(fanta);
+        assertEquals(3D, takeAwayBill.getOrderPrice(list, user, orderInTime), 0.0001D);
     }
     
     @Test
     public void test_getOrderPrice50DiscountApplied() throws TakeAwayBillException {
-        list.add(sandwich);
-        list.add(cornetto);
-        list.add(sandwich);
         list.add(cornetto);
         list.add(cornetto);
-        list.add(sandwich);
+        list.add(cornetto);
+        list.add(cornetto);
+        list.add(cornetto);
+        list.add(cornetto);
         list.add(fanta);
-        assertEquals(16.1D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+        assertEquals(17.35D, takeAwayBill.getOrderPrice(list, user, orderInTime), 0.0001D);
     }
     
     @Test
@@ -108,12 +122,9 @@ public class TakeAwayBillTest {
         list.add(pannaCotta);
         list.add(pannaCotta);
         list.add(pannaCotta);
+        list.add(pannaCotta);
         list.add(cornetto);
-        list.add(cornetto);
-        list.add(creamCaramel);
-        list.add(fanta);
-        list.add(fanta);
-        assertEquals(50.31D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+        assertEquals(47.43D, takeAwayBill.getOrderPrice(list, user, orderInTime), 0.0001D);
     }
     
     @Test
@@ -121,15 +132,14 @@ public class TakeAwayBillTest {
         list.add(cornetto);
         list.add(cornetto);
         list.add(cornetto);
-        list.add(sandwich);
-        list.add(sandwich);
-        list.add(sandwich);
+        list.add(cornetto);
+        list.add(cornetto);
+        list.add(cornetto);
         list.add(pannaCotta);
         list.add(pannaCotta);
         list.add(pannaCotta);
-        list.add(creamCaramel);
-        
-        assertEquals(44.19D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+        list.add(pannaCotta);
+        assertEquals(49.365D, takeAwayBill.getOrderPrice(list, user, orderInTime), 0.0001D);
     }
     
     @Test
@@ -139,9 +149,32 @@ public class TakeAwayBillTest {
         list.add(ghiacciolo);
         list.add(ghiacciolo);
         list.add(ghiacciolo);
-        list.add(sandwich);
-        
-        assertEquals(6.3D, takeAwayBill.getOrderPrice(list, user), 0.0001D);
+        list.add(cornetto);
+        assertEquals(6.8D, takeAwayBill.getOrderPrice(list, user, orderInTime), 0.0001D);
+    }
+    
+    @Test
+    public void test_getOrderPriceFreeRandomOrderApplied() throws TakeAwayBillException {
+        list.add(pannaCotta);
+        assertEquals(0D, takeAwayBill.getOrderPrice(list, userMin, orderInTime), 0.0001D);
+    }
+    
+    @Test
+    public void test_getOrderPriceFreeRandomOrderAdult() throws TakeAwayBillException {
+        list.add(pannaCotta);
+        assertEquals(10.0D, takeAwayBill.getOrderPrice(list, user, orderInTime), 0.0001D);
+    }
+    
+    @Test
+    public void test_getOrderPriceFreeRandomOrderOutTime() throws TakeAwayBillException {
+        list.add(pannaCotta);
+        assertEquals(10.0D, takeAwayBill.getOrderPrice(list, userMin, orderOutTime), 0.0001D);
+    }
+    
+    @Test
+    public void test_getOrderPriceFreeRandomFalse() throws TakeAwayBillException {
+        list.add(pannaCotta);
+        assertEquals(10.0D, takeAwayBill.getOrderPrice(list, userMin, orderRandomFalse), 0.0001D);
     }
 
 }

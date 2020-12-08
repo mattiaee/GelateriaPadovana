@@ -14,22 +14,27 @@ public class UserTest {
 
     @Before
     public void setup() {
-        user = new UserImpl(34529875L, "Pinco");
+        user = new UserImpl(34529875L, "Pinco", 19);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void test_constructorZeroIdParam() {
-        new UserImpl(0L, "Pinco");
+        new UserImpl(0, "Pinco", 19);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void test_constructorNullNameParam() {
-        new UserImpl(34529875L, null);
+        new UserImpl(34529875L, null, 19);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void test_constructorZeroLengthNameParam() {
-        new UserImpl(34529875L, "");
+        new UserImpl(34529875L, "", 19);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void test_constructorZeroAgeParam() {
+        new UserImpl(34529875L, "Pinco", 0);
     }
 
     @Test
@@ -40,6 +45,11 @@ public class UserTest {
     @Test
     public void testNameGetter() {
         assertEquals("Pinco", user.getName());
+    }
+    
+    @Test
+    public void testAgeGetter() {
+        assertEquals(19, user.getAge());
     }
 
 }

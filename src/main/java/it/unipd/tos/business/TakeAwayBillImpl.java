@@ -2,18 +2,23 @@
 // Mattia Episcopo 1187587
 ////////////////////////////////////////////////////////////////////
 package it.unipd.tos.business;
-
+import java.time.LocalTime;
 import java.util.List;
 
 import it.unipd.tos.business.exception.TakeAwayBillException;
 import it.unipd.tos.model.ItemType;
 import it.unipd.tos.model.MenuItem;
+import it.unipd.tos.model.Order;
 import it.unipd.tos.model.User;
 
 public class TakeAwayBillImpl implements TakeAwayBill {
-
-    public double getOrderPrice(List<MenuItem> itemsOrdered, User user) throws TakeAwayBillException {
-
+    
+    private int ordersCounter = 0;
+    LocalTime freeFrom = LocalTime.parse("18:00:00.00");
+    LocalTime freeTo = LocalTime.parse("19:00:00.00");
+    
+    public double getOrderPrice(List<MenuItem> itemsOrdered, User user, Order order) throws TakeAwayBillException {
+        
         if (itemsOrdered == null) {
             throw new IllegalArgumentException("ItemsOrder is null");
         }
@@ -23,6 +28,10 @@ public class TakeAwayBillImpl implements TakeAwayBill {
 
         if (user == null) {
             throw new IllegalArgumentException("User is not set");
+        }
+        
+        if (order == null) {
+            throw new IllegalArgumentException("Order is not set");
         }
         
         if(itemsOrdered.size() > 30) {
@@ -43,7 +52,6 @@ public class TakeAwayBillImpl implements TakeAwayBill {
                 if(cheapestIcecream == null ||
                         cheapestIcecream.getPrice() > m.getPrice()) {
                     cheapestIcecream = m;
-            
                 }
             }
             
@@ -64,6 +72,13 @@ public class TakeAwayBillImpl implements TakeAwayBill {
         if(result < 10D) {
             result += 0.5D;
         }
+        
+        if(ordersCounter < 10 && order.getRandomFree() && user.getAge() < 18) {
+            if(order.getTime().isAfter(freeFrom) && order.getTime().isBefore(freeTo)) {
+                result = 0D;
+            }
+        }
+            
         
         return result;
 

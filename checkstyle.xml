@@ -8,7 +8,7 @@
     </module>
     <module name="BooleanExpressionComplexity"/>
     <module name="CyclomaticComplexity">
-        <property name="max" value="14"/>
+        <property name="max" value="20"/>
     </module>
     <module name="NeedBraces"/>
     <module name="IllegalImport"/>

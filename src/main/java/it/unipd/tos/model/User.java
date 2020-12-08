@@ -8,5 +8,7 @@ public interface User {
     long getId();
 
     String getName();
+    
+    int getAge();
 
 }

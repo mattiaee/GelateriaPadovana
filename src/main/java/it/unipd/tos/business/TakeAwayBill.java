@@ -7,8 +7,11 @@ import java.util.List;
 
 import it.unipd.tos.business.exception.TakeAwayBillException;
 import it.unipd.tos.model.MenuItem;
+import it.unipd.tos.model.Order;
 import it.unipd.tos.model.User;
 
 public interface TakeAwayBill {
-    double getOrderPrice(List<MenuItem> itemsOrdered, User user) throws TakeAwayBillException;
+    
+    //passare anche orario o testate ordine
+    double getOrderPrice(List<MenuItem> itemsOrdered, User user, Order order) throws TakeAwayBillException;
 }
