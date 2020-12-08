@@ -1,0 +1,16 @@
+////////////////////////////////////////////////////////////////////
+// Mattia Episcopo 1187587
+////////////////////////////////////////////////////////////////////
+package it.unipd.tos.model;
+
+import java.time.LocalTime;
+
+public interface Order {
+    
+    long getId();
+
+    LocalTime getTime();
+    
+    boolean getRandomFree();
+    
+}
